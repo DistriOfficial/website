@@ -4,13 +4,10 @@
 
 (function (global) {
   const WANZ_CONFIG = {
-    // Domain harus lengkap dengan protocol (http:// atau https://)
-    domain: "http://oktb.publik-panel.my.id",
-    // Atur port di sini. Jika kosong string -> port tidak dipakai.
-    port: "22271",
-    // timeout ms untuk setiap fetch
-    timeout: 5000,
-  };
+  domain: "https://website-omega-ten-69.vercel.app/api/proxy",
+  port: "",  // ← kosong, biar pakai full URL proxy
+  timeout: 5000,
+};
 
   // --- helper: build base url ---
   function buildBase() {
