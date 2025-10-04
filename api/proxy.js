@@ -1,19 +1,14 @@
-// api/proxy.js
-// ✅ Versi FINAL — Vercel serverless proxy ke backend bot.js
-// Pastikan file ini ada di folder root project Vercel, bukan di /public
-
+// api/proxy.js — FINAL FIXED
 export default async function handler(req, res) {
-  // 🧠 Ganti URL ini ke alamat backend (yang menjalankan bot.js)
   const targetBase = "http://oktb.publik-panel.my.id:22271";
 
-  // Hapus prefix "/api/proxy" dari path agar cocok dengan backend
+  // Hapus prefix "/api/proxy" dari req.url
   const path = req.url.replace(/^\/api\/proxy/, "") || "/";
   const targetUrl = `${targetBase}${path}`;
 
   console.log(`[Proxy] ${req.method} → ${targetUrl}`);
 
   try {
-    // Forward request ke backend
     const response = await fetch(targetUrl, {
       method: req.method,
       headers: {
@@ -26,11 +21,9 @@ export default async function handler(req, res) {
           : JSON.stringify(req.body),
     });
 
-    // Ambil response content-type untuk deteksi JSON
     const contentType = response.headers.get("content-type");
     const status = response.status;
 
-    // Balikkan ke client (frontend)
     if (contentType && contentType.includes("application/json")) {
       const data = await response.json();
       res.status(status).json(data);
