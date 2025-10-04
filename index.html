@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XCVI SIMILARITY | Wanz Official</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at center, #000 30%, #030303 100%);
+      color: #00ff9c;
+      font-family: 'Share Tech Mono', monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 2;
+    }
+
+    .lightning {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(0,255,156,0.1), transparent 60%);
+      animation: pulse 4s infinite ease-in-out;
+      z-index: 0;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.1; }
+      50% { opacity: 0.5; }
+    }
+
+    .card {
+      position: relative;
+      z-index: 2;
+      background: rgba(0, 0, 0, 0.65);
+      border: 1px solid rgba(0,255,156,0.2);
+      border-radius: 12px;
+      box-shadow: 0 0 25px #00ff9c22, inset 0 0 15px #00ff9c22;
+      width: 360px;
+      padding: 25px;
+      animation: fadeIn 0.8s ease-out;
+      backdrop-filter: blur(4px);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    h1 {
+      text-align: center;
+      color: #00ff9c;
+      text-shadow: 0 0 10px #00ff9c;
+      margin: 0;
+    }
+
+    .muted {
+      font-size: 0.8em;
+      text-align: center;
+      opacity: 0.8;
+    }
+
+    .pill {
+      text-align: center;
+      margin: 10px 0;
+      padding: 6px;
+      border-radius: 5px;
+      font-size: 0.85em;
+      transition: all .3s ease;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-size: 0.8em;
+      color: #bfffe4;
+    }
+
+    input, textarea {
+      width: 100%;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid #00ff9c55;
+      color: #00ff9c;
+      border-radius: 6px;
+      padding: 8px;
+      margin-top: 5px;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    textarea {
+      height: 60px;
+      resize: none;
+    }
+
+    .btn {
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      margin-top: 10px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all .3s ease;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: #00ff9c22;
+      color: #00ff9c;
+      border: 1px solid #00ff9c88;
+    }
+
+    .btn-primary:hover {
+      background: #00ff9c44;
+      transform: scale(1.05);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: #ff5050;
+      border: 1px solid #ff505066;
+    }
+
+    .btn-ghost:hover {
+      background: #ff505022;
+      transform: scale(1.05);
+    }
+
+    .code {
+      text-align: center;
+      margin: 10px 0;
+      font-size: 1.4em;
+      letter-spacing: 2px;
+      color: #fff;
+      text-shadow: 0 0 10px #00ff9c;
+    }
+
+    .log {
+      margin-top: 15px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(0,255,156,0.15);
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 0.8em;
+      height: 80px;
+      overflow-y: auto;
+      color: #aaffdd;
+    }
+
+    .overlay {
+      position: fixed;
+      top:0; left:0; width:100%; height:100%;
+      background: rgba(0,0,0,0.85);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:99;
+    }
+
+    .overlay.show { display:flex; }
+
+    .modal {
+      background:#000;
+      border:1px solid #00ff9c55;
+      box-shadow:0 0 20px #00ff9c33;
+      padding:20px;
+      border-radius:10px;
+      width:300px;
+      animation:pop .3s ease;
+    }
+
+    @keyframes pop {
+      from{transform:scale(0.8);opacity:0;}
+      to{transform:scale(1);opacity:1;}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="lightning"></div>
+    <div class="card">
+      <h1>XCVI SIMILARITY</h1>
+      <p class="muted">
+        Website bug <code>Wanz Official</code><br>
+        Domain: <b id="domainShow"></b> | Port: <b id="portShow"></b>
+      </p>
+
+      <div id="serverStatus" class="pill">Server: mengecek...</div>
+
+      <label>Nama Session</label>
+      <input id="nameInput" placeholder="contoh: wanz">
+
+      <label>Nomor (format internasional tanpa +)</label>
+      <input id="phoneInput" placeholder="628xxxxxx">
+
+      <button class="btn btn-primary" id="btnConnect">Connect</button>
+      <button class="btn btn-ghost" id="btnDisconnect" style="display:none">Disconnect</button>
+
+      <div class="pill" id="statusPill">Status: idle</div>
+      <div id="pairingCode" class="code">—</div>
+
+      <hr style="margin:20px 0;border:none;border-top:1px solid rgba(255,255,255,0.1)">
+
+      <label>Nomor Tujuan</label>
+      <input id="sendTo" placeholder="628xxxxxx">
+      <label>Pesan</label>
+      <textarea id="sendText" placeholder="Halo dari panel..."></textarea>
+      <button class="btn btn-primary" id="btnSend">Kirim Pesan</button>
+      <button class="btn btn-ghost" id="btnSessions">Lihat Sessions</button>
+
+      <div class="log" id="logBox">[Log siap...]</div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <h3 id="modalTitle">Info</h3>
+      <div id="modalBody" style="margin-top:10px"></div>
+      <div style="margin-top:10px;text-align:right">
+        <button class="btn btn-primary" id="modalClose">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import config -->
+  <script src="./wanzdev.js"></script>
+
+  <!-- Script utama -->
+  <script>
+  const $ = s => document.querySelector(s);
+  $('#domainShow').textContent = WANZ_CONFIG.domain || '-';
+  $('#portShow').textContent = WANZ_CONFIG.port || '-';
+
+  function log(msg) {
+    const t = new Date().toLocaleTimeString();
+    const box = $('#logBox');
+    box.innerHTML = `[${t}] ${msg}<br>` + box.innerHTML;
+    console.log(msg);
+  }
+
+  function showModal(title, body, color='#00ff9c', autoclose=false) {
+    $('#modalTitle').textContent = title;
+    $('#modalTitle').style.color = color;
+    $('#modalBody').innerHTML = body;
+    $('#overlay').classList.add('show');
+    if (autoclose) setTimeout(()=>$('#overlay').classList.remove('show'), 2500);
+  }
+  $('#modalClose').onclick = ()=>$('#overlay').classList.remove('show');
+
+  async function updateServerStatus() {
+    const pill = $('#serverStatus');
+    const domain = WANZ_CONFIG.domain;
+    const port = WANZ_CONFIG.port;
+
+    if (!domain || !port) {
+      pill.textContent = 'Server: tidak terhubung ❌';
+      pill.style.background = 'rgba(255,50,50,0.1)';
+      pill.style.color = '#ff5050';
+      log('Domain atau port kosong, server tidak dapat dihubungi.');
+      return;
+    }
+
+    const url = `${domain}:${port}/`;
+    const controller = new AbortController();
+    const timeout = setTimeout(()=>controller.abort(), 3000);
+
+    try {
+      const res = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeout);
+      const data = await res.json();
+      if (data?.success) {
+        pill.textContent = 'Server: terhubung ✅';
+        pill.style.background = 'rgba(0,255,156,0.1)';
+        pill.style.color = '#00ff9c';
+        log('Server aktif dan siap digunakan.');
+      } else {
+        throw new Error('Respons tidak valid');
+      }
+    } catch (err) {
+      clearTimeout(timeout);
+      pill.textContent = 'Server: gagal dihubungi ❌';
+      pill.style.background = 'rgba(255,50,50,0.1)';
+      pill.style.color = '#ff5050';
+      log(`⚠️ Gagal menghubungi server: ${err.message}`);
+      console.error(err);
+    }
+  }
+  updateServerStatus();
+
+  let connectedName = null;
+
+  $('#btnConnect').onclick = async () => {
+    const name = $('#nameInput').value.trim();
+    const phone = $('#phoneInput').value.trim();
+    if (!name || !phone)
+      return showModal('Error', 'Isi nama & nomor dulu.', '#ff5050');
+
+    log('Menghubungkan ke server...');
+    try {
+      const res = await Wanzdev.connect(name, phone);
+      if (res?.pairing_code) {
+        connectedName = name;
+        $('#statusPill').textContent = 'Status: Menunggu pairing...';
+        $('#pairingCode').textContent = res.pairing_code;
+        $('#btnConnect').style.display = 'none';
+        $('#btnDisconnect').style.display = 'inline-block';
+        showModal('Pairing Code', `<div class='code'>${res.pairing_code}</div>Gunakan kode ini di WhatsApp dalam 1 menit.`, '#00ff9c');
+        log('Kode pairing: ' + res.pairing_code);
+      } else {
+        throw new Error(res?.message || res?.detail || 'Koneksi gagal.');
+      }
+    } catch (e) {
+      log('❌ Koneksi gagal: ' + e.message);
+      showModal('Gagal', e.message, '#ff5050');
+    }
+  };
+
+  $('#btnDisconnect').onclick = async () => {
+    if (!connectedName)
+      return showModal('Error','Belum ada session aktif.','#ff5050');
+    try {
+      const res = await Wanzdev.disconnect(connectedName);
+      if (res?.success) {
+        log(`Session ${connectedName} dihapus.`);
+        $('#statusPill').textContent = 'Status: idle';
+        $('#pairingCode').textContent = '—';
+        $('#btnDisconnect').style.display = 'none';
+        $('#btnConnect').style.display = 'inline-block';
+        connectedName = null;
+        showModal('Berhasil','Session dihapus permanen.', '#00ff9c');
+      } else throw new Error(res?.message || 'Gagal menghapus session.');
+    } catch (e) {
+      log('❌ Gagal disconnect: ' + e.message);
+      showModal('Gagal', e.message, '#ff5050');
+    }
+  };
+
+  $('#btnSend').onclick = async () => {
+    if (!connectedName)
+      return showModal('Error','Connect dulu.','#ff5050');
+    const to = $('#sendTo').value.trim();
+    const text = $('#sendText').value.trim();
+    if (!to || !text)
+      return showModal('Error','Isi nomor & pesan.','#ff5050');
+    try {
+      const res = await Wanzdev.sendMessage(connectedName, to, text);
+      if (res?.success) {
+        log(`Pesan terkirim ke ${to}`);
+        showModal('Terkirim','Pesan berhasil dikirim.', '#00ff9c', true);
+      } else throw new Error(res?.message || 'Gagal kirim pesan.');
+    } catch (e) {
+      log('❌ Gagal kirim pesan: ' + e.message);
+      showModal('Gagal', e.message, '#ff5050');
+    }
+  };
+
+  $('#btnSessions').onclick = async () => {
+    try {
+      const res = await Wanzdev.listSessions();
+      if (res?.success) {
+        const list = (res.sessions || []).map(s=>`<li>${s}</li>`).join('') || '<i>Kosong</i>';
+        showModal('Daftar Sessions', `<ul>${list}</ul>`, '#00ff9c');
+      } else throw new Error(res?.message || 'Gagal ambil sessions.');
+    } catch (e) {
+      log('❌ Gagal ambil sessions: ' + e.message);
+      showModal('Error', e.message, '#ff5050');
+    }
+  };
+  </script>
+</body>
+</html>
