@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>XCVI SIMILARITY — Panel Wanz Official</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg-1: #040404;
+      --bg-2: #07120f;
+      --accent: #00ff9c;
+      --muted: #9fe9c8;
+      --danger: #ff6b6b;
+      --card: rgba(255,255,255,0.03);
+      --glass: rgba(255,255,255,0.02);
+      --glass-strong: rgba(0,0,0,0.55);
+      --radius: 14px;
+      --easing: cubic-bezier(.16,.84,.44,1);
+    }
+
+    * { box-sizing: border-box; }
+    html,body { height:100%; margin:0; font-family: Inter, "Share Tech Mono", monospace; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; color:var(--muted); background:
+      radial-gradient(1200px 600px at 10% 10%, rgba(0,255,156,0.03), transparent 12%),
+      radial-gradient(900px 400px at 90% 80%, rgba(0,120,60,0.02), transparent 12%),
+      linear-gradient(180deg,var(--bg-1),var(--bg-2)); }
+
+    /* layout */
+    .container { max-width:1200px; margin:28px auto; padding:28px; height:calc(100vh - 56px); display:grid; grid-template-columns: 1fr 420px; gap:28px; align-items:stretch; }
+    @media (max-width:980px){ .container{ grid-template-columns: 1fr; padding:18px; height:auto } }
+
+    /* hero card */
+    .hero {
+      background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.2));
+      border-radius:var(--radius); padding:28px; border:1px solid rgba(0,255,156,0.06); box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      display:flex; flex-direction:column; gap:18px; position:relative; overflow:hidden;
+    }
+
+    .hero .header {
+      display:flex; align-items:center; gap:16px;
+    }
+    .logo {
+      width:72px; height:72px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+      background: linear-gradient(135deg,#002717,#004a2b); border:1px solid rgba(0,255,156,0.12); transform:rotate(-6deg);
+      box-shadow: 0 12px 32px rgba(0,255,156,0.04);
+    }
+    .logo svg{filter:drop-shadow(0 12px 24px rgba(0,255,156,0.04));}
+
+    .title { font-size:22px; color:var(--accent); margin:0; letter-spacing:1px; font-weight:700; }
+    .subtitle { margin:0; font-size:13px; color:#c7f9dd; opacity:0.9; }
+
+    /* info row */
+    .info-row { display:flex; gap:12px; align-items:center; margin-top:12px; flex-wrap:wrap; }
+    .chip { background:var(--card); padding:8px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.02); font-size:13px; color:var(--muted); }
+
+    /* main form */
+    .form { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px; align-items:start; }
+    @media (max-width:980px){ .form{ grid-template-columns:1fr } }
+
+    label { font-size:12px; color:#bfffe4; margin-top:8px; display:block; }
+    input, textarea, select {
+      width:100%; border-radius:10px; padding:12px; margin-top:6px; background:var(--glass-strong);
+      border:1px solid rgba(0,255,156,0.06); color:var(--accent); font-family: 'Share Tech Mono', monospace; font-size:14px;
+    }
+    textarea{ height:96px; resize:vertical; }
+
+    .controls { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+
+    .btn {
+      padding:10px 14px; border-radius:10px; font-weight:600; cursor:pointer; border:none;
+      background:transparent; color:var(--muted); transition:transform .18s var(--easing), box-shadow .18s var(--easing);
+    }
+    .btn:active{ transform:translateY(1px); }
+    .btn-primary {
+      background:linear-gradient(90deg, rgba(0,255,156,0.08), rgba(0,255,156,0.02)); color:var(--accent);
+      border:1px solid rgba(0,255,156,0.12); box-shadow:0 8px 30px rgba(0,255,156,0.03);
+    }
+    .btn-ghost { border:1px solid rgba(255,80,80,0.08); color:var(--danger); background:transparent; }
+
+    .pairing-block { margin-top:12px; background:rgba(0,0,0,0.45); padding:12px; border-radius:10px; border:1px dashed rgba(0,255,156,0.04) }
+    .pairing-code { font-family:'Share Tech Mono'; font-size:28px; color:#fff; letter-spacing:4px; margin-top:6px; }
+
+    /* right panel */
+    .panel { border-radius:var(--radius); background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.35)); padding:18px; border:1px solid rgba(255,255,255,0.02); box-shadow: 0 10px 36px rgba(0,0,0,0.6); display:flex; flex-direction:column; gap:12px; }
+    .panel h3{ margin:0;color:var(--accent) }
+    .diagnostics { font-size:13px; color:#bfffe4; opacity:0.9; }
+
+    .log { flex:1; background:linear-gradient(180deg, rgba(0,0,0,0.3), rgba(0,0,0,0.45)); overflow:auto; border-radius:10px; padding:12px; font-family:'Share Tech Mono'; font-size:13px; border:1px solid rgba(0,255,156,0.02) }
+    .log .entry { padding:8px;border-bottom:1px dashed rgba(255,255,255,0.02) }
+    .log .time { color:#9ee9c8;font-size:12px;margin-bottom:6px }
+    .log .msg.error { color:var(--danger) }
+    .log .msg.ok { color:var(--accent) }
+
+    /* overlay modal */
+    .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:none; align-items:center; justify-content:center; z-index:999; }
+    .overlay.show { display:flex; }
+    .modal { width:min(920px,96vw); background:#050505; border-radius:12px; padding:20px; border:1px solid rgba(0,255,156,0.06) }
+
+    /* animations */
+    .float-anim { animation:float 6s ease-in-out infinite; }
+    @keyframes float { 0%{ transform:translateY(0) } 50%{ transform:translateY(-8px) } 100%{ transform:translateY(0) } }
+
+    /* full-screen header banner */
+    .hero-banner {
+      position:absolute; right:-120px; top:-80px; width:420px; height:420px; opacity:0.06;
+      background: conic-gradient(from 180deg at 50% 50%, rgba(0,255,156,0.06), rgba(0,120,80,0.02));
+      transform:rotate(15deg); border-radius:40%; filter:blur(20px);
+    }
+  </style>
+</head>
+<body>
+  <!-- Load wanzdev.js (must be before main script) -->
+  <script src="./wanzdev.js"></script>
+
+  <div class="container">
+    <!-- left: main hero -->
+    <div class="hero">
+      <div class="hero-banner" aria-hidden="true"></div>
+
+      <div class="header">
+        <div class="logo float-anim" aria-hidden="true">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="2" width="20" height="20" rx="5" fill="#002b17"/>
+            <path d="M7 12h10M7 8h10M7 16h6" stroke="#00ff9c" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="title">XCVI SIMILARITY</div>
+          <div class="subtitle">Wanz Official — WhatsApp panel bridge (Connect • Send • Sessions)</div>
+        </div>
+      </div>
+
+      <div class="info-row" aria-hidden="true">
+        <div class="chip" id="domainChip">Domain: -</div>
+        <div class="chip" id="portChip">Port: -</div>
+        <div class="chip" id="modeChip">Mode: -</div>
+        <div style="flex:1"></div>
+        <div class="chip">Version: <strong id="verChip">1.0</strong></div>
+      </div>
+
+      <!-- Main interactive form -->
+      <div style="margin-top:10px">
+        <div class="form">
+          <div>
+            <label>Nama Session</label>
+            <input id="nameInput" placeholder="contoh: wanz">
+
+            <label>Nomor (format internasional tanpa +)</label>
+            <input id="phoneInput" placeholder="628xxxxxxxx">
+          </div>
+
+          <div>
+            <label>Nomor Tujuan</label>
+            <input id="sendTo" placeholder="628xxxxxxxx">
+
+            <label>Pesan</label>
+            <textarea id="sendText" placeholder="Halo dari panel..."></textarea>
+          </div>
+        </div>
+
+        <div class="controls">
+          <button class="btn btn-primary" id="btnConnect">Connect</button>
+          <button class="btn btn-ghost" id="btnDisconnect" style="display:none">Disconnect</button>
+          <button class="btn" id="btnSend">Kirim Pesan</button>
+          <button class="btn" id="btnSessions">Lihat Sessions</button>
+          <button class="btn" id="btnRefresh">Refresh Status</button>
+        </div>
+
+        <div class="pairing-block">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-weight:700">Status panel</div>
+              <div class="small" id="serverStatusText">Mengecek...</div>
+            </div>
+            <div style="text-align:right">
+              <div class="small">Server detail</div>
+              <div id="serverDetail" style="font-family:'Share Tech Mono'">—</div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px">
+            <div id="statusPill" style="display:inline-block;padding:8px 12px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.02)">idle</div>
+            <div class="pairing-code" id="pairingCode">—</div>
+          </div>
+
+          <div style="margin-top:8px;font-size:13px;color:#bfffe4">Tips: Tekan <strong>Connect</strong>, lalu masukkan kode pairing di chat WhatsApp yang sesuai.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- right: diagnostics -->
+    <div class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <h3>Console & Diagnostics</h3>
+          <div class="diagnostics">Logs, raw responses, and helpful troubleshooting hints</div>
+        </div>
+        <div style="text-align:right">
+          <div class="small">Base: <span id="baseLabel">-</span></div>
+        </div>
+      </div>
+
+      <div class="log" id="logBox" aria-live="polite" role="log"></div>
+
+      <div style="display:flex;gap:8px;justify-content:space-between">
+        <div style="display:flex;gap:8px">
+          <button class="btn" id="btnClearLog">Clear</button>
+          <button class="btn" id="btnDownloadLog">Download</button>
+        </div>
+        <div style="font-size:13px;color:#bfffe4" id="lastPing">—</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true">
+    <div class="modal">
+      <h3 id="modalTitle">Info</h3>
+      <div id="modalBody" style="margin-top:10px;color:#dfffe8;font-size:13px"></div>
+      <div style="margin-top:12px;text-align:right">
+        <button class="btn btn-primary" id="modalClose">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN SCRIPT -->
+  <script>
+    // ---- helpers ----
+    const $ = s => document.querySelector(s);
+    const logBox = $('#logBox');
+    const overlay = $('#overlay'), modalTitle = $('#modalTitle'), modalBody = $('#modalBody');
+    function now() { return new Date().toLocaleString(); }
+
+    function appendLog(title, message, level='info') {
+      const e = document.createElement('div');
+      e.className = 'entry';
+      const time = document.createElement('div'); time.className='time'; time.textContent = `[${now()}] ${title}`;
+      const msg = document.createElement('div'); msg.className = 'msg'; msg.innerHTML = message;
+      if (level === 'error') msg.classList.add('error'); else msg.classList.add('ok');
+      e.appendChild(time); e.appendChild(msg);
+      logBox.prepend(e);
+    }
+
+    function showModal(title, body) {
+      modalTitle.textContent = title;
+      modalBody.innerHTML = body;
+      overlay.classList.add('show');
+    }
+    $('#modalClose').onclick = ()=> overlay.classList.remove('show');
+
+    function escapeHtml(s){ return (''+s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+    // ensure Wanzdev & WANZ_CONFIG available
+    const cfgExists = typeof window.WANZ_CONFIG !== 'undefined' && typeof window.Wanzdev !== 'undefined';
+    if (!cfgExists) {
+      appendLog('Initialization error', 'wanzdev.js belum dimuat atau WANZ_CONFIG tidak ditemukan', 'error');
+      showModal('Konfigurasi hilang', 'File <code>wanzdev.js</code> harus dimuat sebelum script utama. Pastikan <code>&lt;script src="./wanzdev.js"&gt;&lt;/script&gt;</code> ada di atas.', );
+      throw new Error('WANZ_CONFIG missing');
+    }
+
+    // safe aliases
+    const WANZ = window.WANZ_CONFIG;
+    const API = window.Wanzdev;
+    $('#domainChip').textContent = 'Domain: ' + (WANZ.domain || '-');
+    $('#portChip').textContent = 'Port: ' + (WANZ.port || '(proxy)');
+    $('#modeChip').textContent = (WANZ.port ? 'Direct' : 'Proxy');
+    $('#baseLabel').textContent = API.getBase() || '(none)';
+
+    // status checker
+    let lastPing = null;
+    async function updateServerStatus() {
+      const base = API.getBase();
+      if (!base) {
+        appendLog('Status', 'WANZ_CONFIG.domain belum diset', 'error');
+        $('#serverStatusText').textContent = 'Domain kosong';
+        $('#serverDetail').textContent = 'Atur wanzdev.js';
+        return;
+      }
+      const url = base.replace(/\/+$/,'') + '/';
+      appendLog('Ping', `GET ${url}`);
+      $('#lastPing').textContent = 'Pinging...';
+      const controller = new AbortController();
+      const timeout = setTimeout(()=>controller.abort(), (WANZ.timeout || 6000));
+      try {
+        const res = await fetch(url, { signal: controller.signal });
+        clearTimeout(timeout);
+        const txt = await res.text();
+        try {
+          const json = JSON.parse(txt);
+          if (json?.success) {
+            $('#serverStatusText').textContent = 'Terkoneksi ✅';
+            $('#serverDetail').textContent = `${json.creator || ''} — ${json.message || ''}`;
+            appendLog('Status OK', `HTTP ${res.status} — ${escapeHtml(JSON.stringify(json))}`);
+            $('#statusPill').textContent = 'connected';
+            $('#pairingCode').textContent = '—';
+            lastPing = new Date();
+            $('#lastPing').textContent = 'Last ping: ' + lastPing.toLocaleTimeString();
+            return;
+          } else {
+            $('#serverStatusText').textContent = 'Respons tidak valid';
+            $('#serverDetail').textContent = `HTTP ${res.status}`;
+            appendLog('Invalid status', `HTTP ${res.status} — ${escapeHtml(txt)}`, 'error');
+            showModal('Respons tidak valid', `<pre style="white-space:pre-wrap">${escapeHtml(txt)}</pre>`);
+          }
+        } catch (e) {
+          $('#serverStatusText').textContent = 'Respons bukan JSON';
+          $('#serverDetail').textContent = `HTTP ${res.status}`;
+          appendLog('Non-JSON response', `HTTP ${res.status} — ${escapeHtml(txt)}`, 'error');
+          showModal('Respons bukan JSON', `<pre style="white-space:pre-wrap">${escapeHtml(txt)}</pre>`);
+        }
+      } catch (err) {
+        clearTimeout(timeout);
+        const reason = err.name === 'AbortError' ? 'TIMEOUT' : err.message;
+        $('#serverStatusText').textContent = 'Gagal menghubungi server';
+        $('#serverDetail').textContent = reason;
+        appendLog('Network error', reason, 'error');
+        $('#statusPill').textContent = 'offline';
+        $('#lastPing').textContent = 'Last ping: error';
+      }
+    }
+
+    // initial status
+    updateServerStatus();
+    $('#btnRefresh').onclick = updateServerStatus;
+
+    // API wrapper helper
+    async function apiCall(fn, args=[]) {
+      try {
+        const res = await fn(...args);
+        appendLog('API', escapeHtml(JSON.stringify(res)));
+        return res;
+      } catch (e) {
+        appendLog('API Exception', escapeHtml(e.message), 'error');
+        showModal('Exception', escapeHtml(e.message));
+        throw e;
+      }
+    }
+
+    // actions
+    let connectedName = null;
+
+    $('#btnConnect').onclick = async () => {
+      const name = $('#nameInput').value.trim();
+      const phone = $('#phoneInput').value.trim();
+      if (!name || !phone) { showModal('Error', 'Isi nama & nomor terlebih dahulu.'); return; }
+      appendLog('Connect', `requesting pairing for ${name} → ${phone}`);
+      try {
+        const res = await apiCall(API.connect, [name, phone]);
+        if (res?.pairing_code) {
+          connectedName = name;
+          $('#statusPill').textContent = 'waiting for pairing';
+          $('#pairingCode').textContent = res.pairing_code;
+          $('#btnConnect').style.display = 'none';
+          $('#btnDisconnect').style.display = 'inline-block';
+          showModal('Pairing Code', `<div style="font-size:26px;font-family:'Share Tech Mono'">${escapeHtml(res.pairing_code)}</div><div style="margin-top:8px">Masukkan kode ini di WhatsApp dalam 1 menit.</div>`);
+        } else {
+          appendLog('Connect failed', escapeHtml(JSON.stringify(res)), 'error');
+          showModal('Gagal Connect', `<pre>${escapeHtml(JSON.stringify(res, null, 2))}</pre>`);
+        }
+      } catch (e) { /* handled in apiCall */ }
+    };
+
+    $('#btnDisconnect').onclick = async () => {
+      if (!connectedName) { showModal('Info', 'Tidak ada session aktif.'); return; }
+      try {
+        const res = await apiCall(API.disconnect, [connectedName]);
+        if (res?.success) {
+          appendLog('Disconnect', `Session ${connectedName} removed`);
+          $('#pairingCode').textContent = '—';
+          $('#statusPill').textContent = 'idle';
+          $('#btnDisconnect').style.display = 'none';
+          $('#btnConnect').style.display = 'inline-block';
+          connectedName = null;
+          showModal('Sukses', 'Session dihapus permanen.');
+        } else {
+          showModal('Gagal disconnect', `<pre>${escapeHtml(JSON.stringify(res, null, 2))}</pre>`);
+        }
+      } catch (e) {}
+    };
+
+    $('#btnSend').onclick = async () => {
+      if (!connectedName) { showModal('Error','Connect dulu.'); return; }
+      const to = $('#sendTo').value.trim();
+      const text = $('#sendText').value.trim();
+      if (!to || !text) { showModal('Error','Isi nomor & pesan.'); return; }
+      appendLog('Send', `to ${to}`);
+      try {
+        const res = await apiCall(API.sendMessage, [connectedName, to, text]);
+        if (res?.success) {
+          appendLog('Send OK', `Pesan terkirim ke ${to}`);
+          showModal('Terkirim', 'Pesan berhasil dikirim.');
+        } else {
+          showModal('Gagal kirim', `<pre>${escapeHtml(JSON.stringify(res, null, 2))}</pre>`);
+        }
+      } catch (e) {}
+    };
+
+    $('#btnSessions').onclick = async () => {
+      try {
+        const res = await apiCall(API.listSessions, []);
+        if (res?.success) {
+          const list = (res.sessions || []).map(s=>`<li>${escapeHtml(s)}</li>`).join('') || '<i>kosong</i>';
+          showModal('Daftar Sessions', `<ul>${list}</ul>`);
+        } else showModal('Gagal ambil sessions', `<pre>${escapeHtml(JSON.stringify(res, null,2))}</pre>`);
+      } catch (e) {}
+    };
+
+    $('#btnClearLog').onclick = ()=> logBox.innerHTML = '';
+    $('#btnDownloadLog').onclick = ()=>{
+      const txt = Array.from(logBox.querySelectorAll('.entry')).map(e=>e.innerText).join("\n\n");
+      const blob = new Blob([txt], {type:'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `wanz-log-${Date.now()}.txt`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    };
+
+    // auto refresh status every 30s
+    setInterval(updateServerStatus, 30000);
+
+    // safety: expose debug globally (only for dev)
+    window.__WanzDebug = { appendLog, API, WANZ };
+  </script>
+</body>
+</html>
