@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wanz Panel — WhatsApp Bridge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --pink-neon: #ff2fa8;
+      --pink-soft: #ffc3e1;
+      --bg-dark: #070305;
+      --card-bg: rgba(255,255,255,0.02);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(180deg, var(--bg-dark), #050103);
+      color: var(--pink-soft);
+      -webkit-font-smoothing: antialiased;
+    }
+    header {
+      text-align: center;
+      padding: 30px 10px;
+    }
+    header h1 {
+      font-family: 'Pacifico', cursive;
+      color: var(--pink-neon);
+      margin: 0;
+      font-size: 2.5rem;
+    }
+    header p {
+      margin-top: 8px;
+      opacity: 0.9;
+    }
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      gap: 20px;
+    }
+    section {
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.05);
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.6);
+    }
+    h2 {
+      color: var(--pink-neon);
+      margin-top: 0;
+    }
+    label { display:block; margin-top: 10px; font-size: 14px; }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,47,168,0.1);
+      color: var(--pink-soft);
+      margin-top: 5px;
+    }
+    textarea { min-height: 100px; resize: vertical; }
+    button {
+      background: linear-gradient(90deg, rgba(255,47,168,0.12), rgba(255,195,225,0.04));
+      color: var(--pink-neon);
+      border: 1px solid rgba(255,47,168,0.16);
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: rgba(255,47,168,0.2);
+    }
+    .pairing-code {
+      font-family: 'Share Tech Mono', monospace;
+      background: rgba(255,47,168,0.08);
+      padding: 8px 12px;
+      display: inline-block;
+      margin-top: 10px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+    }
+    #logBox {
+      background: rgba(0,0,0,0.4);
+      padding: 12px;
+      height: 250px;
+      overflow-y: auto;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 13px;
+      border-radius: 10px;
+    }
+    .entry {
+      border-bottom: 1px dashed rgba(255,255,255,0.05);
+      padding: 8px 0;
+    }
+    .entry .time {
+      color: #ffdff4;
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+    .entry .msg { color: #ffdff4; }
+  </style>
+</head>
+<body>
+  <script src="./wanzdev.js"></script>
+
+  <header>
+    <h1>Wanz Panel</h1>
+    <p>WhatsApp Bridge — Connect • Send • Manage • Monitor</p>
+  </header>
+
+  <main>
+    <!-- CONNECT SECTION -->
+    <section>
+      <h2>⚡ Pengaturan Koneksi</h2>
+      <label>Nama Session</label>
+      <input id="nameInput" placeholder="contoh: wanz">
+      <label>Nomor (tanpa +)</label>
+      <input id="phoneInput" placeholder="628xxxxxxx">
+      <button id="btnConnect">Connect (Pair)</button>
+      <button id="btnDisconnect" style="display:none;">Disconnect</button>
+      <button id="btnCheck">Cek Status Server</button>
+
+      <div class="pairing-code" id="pairingCode">—</div>
+      <div id="statusText" style="margin-top:8px;font-size:14px;">Status: idle</div>
+    </section>
+
+    <!-- SEND SECTION -->
+    <section>
+      <h2>✉️ Kirim Pesan</h2>
+      <label>Nomor Tujuan</label>
+      <input id="sendTo" placeholder="628xxxxxxx">
+      <label>Pesan</label>
+      <textarea id="sendText"></textarea>
+      <button id="btnSend">Kirim Pesan</button>
+    </section>
+
+    <!-- SESSIONS SECTION -->
+    <section>
+      <h2>🧾 Daftar Session</h2>
+      <button id="btnSessions">Lihat Sessions</button>
+      <div id="sessionsList" style="margin-top:10px;font-family:'Share Tech Mono';"></div>
+    </section>
+
+    <!-- LOG SECTION -->
+    <section>
+      <h2>🧠 Log & Diagnostics</h2>
+      <div id="logBox"></div>
+      <button id="btnClearLog">Clear Log</button>
+    </section>
+  </main>
+
+  <script>
+    const $ = s => document.querySelector(s);
+    const logBox = $('#logBox');
+
+    function log(title, msg, level='info'){
+      const e = document.createElement('div');
+      e.className = 'entry';
+      const t = document.createElement('div');
+      t.className = 'time';
+      t.textContent = `[${new Date().toLocaleString()}] ${title}`;
+      const m = document.createElement('div');
+      m.className = 'msg';
+      m.textContent = msg;
+      if(level === 'error') m.style.color = '#ff2fa8';
+      e.appendChild(t); e.appendChild(m);
+      logBox.prepend(e);
+    }
+
+    const API = window.Wanzdev;
+
+    async function updateServerStatus(){
+      log('Status','Memeriksa server...');
+      const res = await API.status();
+      if(res && res.success){
+        $('#statusText').textContent = 'Status: connected ✅';
+        log('Status','Server OK');
+      } else {
+        $('#statusText').textContent = 'Status: tidak terhubung ❌';
+        log('Status','Server tidak merespon','error');
+      }
+    }
+
+    $('#btnCheck').onclick = updateServerStatus;
+
+    $('#btnConnect').onclick = async () => {
+      const name = $('#nameInput').value.trim();
+      const phone = $('#phoneInput').value.trim();
+      if(!name || !phone) return log('Error','Nama & Nomor wajib diisi','error');
+      log('Connect',`${name} → ${phone}`);
+      const res = await API.connect(name, phone);
+      if(res.success && res.pairing_code){
+        $('#pairingCode').textContent = res.pairing_code;
+        $('#statusText').textContent = 'Status: waiting for pairing...';
+        $('#btnConnect').style.display = 'none';
+        $('#btnDisconnect').style.display = 'inline-block';
+        log('Pairing Code',res.pairing_code);
+      } else {
+        log('Connect Gagal', JSON.stringify(res),'error');
+      }
+    };
+
+    $('#btnDisconnect').onclick = async () => {
+      const name = $('#nameInput').value.trim();
+      if(!name) return log('Error','Nama session belum diisi','error');
+      const res = await API.disconnect(name);
+      if(res.success){
+        log('Disconnect',`Session ${name} dihapus`);
+        $('#pairingCode').textContent = '—';
+        $('#statusText').textContent = 'Status: idle';
+        $('#btnDisconnect').style.display = 'none';
+        $('#btnConnect').style.display = 'inline-block';
+      } else {
+        log('Disconnect Gagal',JSON.stringify(res),'error');
+      }
+    };
+
+    $('#btnSend').onclick = async () => {
+      const name = $('#nameInput').value.trim();
+      const to = $('#sendTo').value.trim();
+      const text = $('#sendText').value.trim();
+      if(!name || !to || !text) return log('Error','Semua field wajib diisi','error');
+      const res = await API.sendMessage(name,to,text);
+      if(res.success){
+        log('Kirim Pesan',`Pesan ke ${to} terkirim ✅`);
+      } else {
+        log('Kirim Gagal',JSON.stringify(res),'error');
+      }
+    };
+
+    $('#btnSessions').onclick = async () => {
+      const res = await API.listSessions();
+      if(res.success){
+        $('#sessionsList').innerHTML = `<pre>${JSON.stringify(res.sessions,null,2)}</pre>`;
+        log('Sessions','Berhasil ambil daftar session');
+      } else {
+        $('#sessionsList').innerHTML = `<pre>${JSON.stringify(res,null,2)}</pre>`;
+        log('Sessions','Gagal ambil daftar','error');
+      }
+    };
+
+    $('#btnClearLog').onclick = () => { logBox.innerHTML = ''; };
+  </script>
+</body>
+</html>
