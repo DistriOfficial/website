@@ -1,13 +1,13 @@
 // api/proxy.js
 export default async function handler(req, res) {
-  // 🛠️ Ganti URL ini ke alamat server backend lu (yang jalanin bot.js)
+  // Alamat backend lu
   const targetBase = "http://oktb.publik-panel.my.id:22271";
 
-  // Gabungkan path dan query dari request frontend
-  const targetUrl = `${targetBase}${req.url}`;
+  // 🧠 Hapus prefix "/api/proxy" dari path supaya backend terima path asli
+  const path = req.url.replace(/^\/api\/proxy/, "") || "/";
+  const targetUrl = `${targetBase}${path}`;
 
   try {
-    // Forward request ke backend
     const response = await fetch(targetUrl, {
       method: req.method,
       headers: {
@@ -19,7 +19,6 @@ export default async function handler(req, res) {
         : JSON.stringify(req.body),
     });
 
-    // Ambil konten dari response
     const contentType = response.headers.get("content-type");
     const status = response.status;
 
