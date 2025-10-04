@@ -1,8 +1,7 @@
-// api/proxy.js — FINAL FIXED
 export default async function handler(req, res) {
   const targetBase = "http://oktb.publik-panel.my.id:22271";
 
-  // Hapus prefix "/api/proxy" dari req.url
+  // ✨ Hapus prefix "/api/proxy" dari path asli
   const path = req.url.replace(/^\/api\/proxy/, "") || "/";
   const targetUrl = `${targetBase}${path}`;
 
@@ -15,10 +14,9 @@ export default async function handler(req, res) {
         "Content-Type": "application/json",
         ...req.headers,
       },
-      body:
-        ["GET", "HEAD"].includes(req.method) || !req.body
-          ? undefined
-          : JSON.stringify(req.body),
+      body: ["GET", "HEAD"].includes(req.method)
+        ? undefined
+        : JSON.stringify(req.body || {}),
     });
 
     const contentType = response.headers.get("content-type");
